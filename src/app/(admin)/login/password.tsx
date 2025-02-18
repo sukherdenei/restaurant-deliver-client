@@ -1,18 +1,26 @@
 import Image from "next/image";
 
-export const Register = () => {
+export default function Password() {
   return (
     <div className="w-[1200px] flex gap-10 m-auto items-center">
       <div className="flex flex-col gap-6 w-[416px] h-[288px] p-10">
         <img src="/chevron-left.png" alt="" className="w-[16px] h-[16px]" />
         <div className="h-[60px]">
-          <h1 className="h-[32px] text-[24px]">Create your account</h1>
-          <p className="text-[16px]">Sign up to explore your favorite dishes</p>
+          <h1 className="h-[32px] text-[24px]">Create a strong password</h1>
+          <p className="text-[16px]">
+            Create a strong password with letters, numbers
+          </p>
         </div>
 
         <input
           type="text"
-          placeholder="Enter your email address"
+          placeholder="enter your password please"
+          className="h-[36px] border-black outline-blue-700 w-[100%]
+"
+        />
+        <input
+          type="text"
+          placeholder="enter your confirm password pls"
           className="h-[36px] border-black outline-blue-700 w-[100%]
 "
         />
@@ -35,4 +43,4 @@ export const Register = () => {
       </div>
     </div>
   );
-};
+}
