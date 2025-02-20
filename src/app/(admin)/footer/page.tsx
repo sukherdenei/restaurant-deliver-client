@@ -55,7 +55,6 @@ export default function Footer() {
             <div className="flex gap-4 p-3">
               <FacebookIcon />
               <InstagramIcon />
-              <img src="x" alt="" />
             </div>
           </div>
         </div>
