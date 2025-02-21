@@ -19,6 +19,7 @@ import { useRouter } from "next/navigation";
 
 export default function Register() {
   const [type, setType] = useState("password");
+  const router = useRouter();
   // Маягтын шаардлага хамгийн багадаа 6 хамгий ихдээ 8
   const formSchema = z
     .object({
@@ -55,11 +56,11 @@ export default function Register() {
     alert("Registration is successful");
     // const router = useRouter();
     // const clickHandler = () => {
-    //   router.push("/login");
+    router.push("/login");
     // };
   }
 
-  const handleToggle = () => {
+  const checkbox = () => {
     if (type === "password") {
       setType("text");
     } else {
@@ -152,7 +153,7 @@ export default function Register() {
           />
           <div className="flex flex-col gap-4">
             <div className="flex gap-2">
-              <input type="checkbox" onClick={handleToggle} />
+              <input type="checkbox" onClick={checkbox} />
               <p>Show password</p>
             </div>
             <Button
