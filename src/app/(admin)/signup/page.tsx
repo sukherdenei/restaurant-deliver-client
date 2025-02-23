@@ -53,10 +53,7 @@ export default function Register() {
   // onClick function. True
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
-    alert("Registration is successful");
-    // const router = useRouter();
-    // const clickHandler = () => {
-    router.push("/login");
+    router.push("/home");
     // };
   }
 
