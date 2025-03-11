@@ -6,16 +6,16 @@ import React from "react";
 
 export const CloudnaryUpload = () => {
   const [file, setFile] = useState(null);
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState("");
 
   const PRESET_NAME = "food-delivery-app";
   const CLOUDINAY_NAME = "deossi8am";
-  // const CLOUDINAY_NAME = "481865156991587";
 
   const handleFile = (e: any) => {
     const file = e.target.files[0];
     if (file) {
       setFile(file);
+      setImage(URL.createObjectURL(file));
     }
   };
 
@@ -40,7 +40,7 @@ export const CloudnaryUpload = () => {
       );
       const data = await res.json();
       setImage(data.secure_url);
-      console.log(data);
+      console.log("image uploaded", data);
     } catch (err) {
       console.log(err);
       alert("Failed to upload file");
@@ -50,7 +50,7 @@ export const CloudnaryUpload = () => {
   };
 
   return (
-    <div className="flex items-center w-[380px] h-[106px]">
+    <div className="">
       <div className="flex justify-center items-center w-full">
         <input type="file" onChange={handleFile} />
         <button onClick={handleUpload} className="bg-green-500 rounded-lg p-1">
@@ -59,15 +59,7 @@ export const CloudnaryUpload = () => {
       </div>
 
       {image && (
-        <div className="bg-red-500">
-          <Image
-            width={300}
-            height={300}
-            alt="uploaded"
-            src={image}
-            className="w-[300px] h-[300px]"
-          />
-        </div>
+        <img alt="uploaded" src={image} className="w-[300px] h-[300px]" />
       )}
     </div>
   );

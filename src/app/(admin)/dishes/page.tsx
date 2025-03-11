@@ -1,10 +1,11 @@
+"use client";
 import Image from "next/image";
 import { NomNom } from "../toggle-menu/page";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
+  // DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -12,18 +13,53 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus } from "lucide-react";
-import { CloudnaryUpload } from "@/app/_components/Cloudnary";
+import { useEffect, useState } from "react";
+// import { Plus } from "lucide-react";
+// import { CloudnaryUpload } from "@/app/_components/Cloudnary";
 
 export default function Dishes() {
+  const [categories, setCategories] = useState([]);
+  const [categoryName, setCategoryName] = useState("");
+
+  useEffect(() => {
+    const getCategories = async () => {
+      const data = await fetch("http://localhost:7000/food-category");
+      const jsondData = await data.json();
+      // setCategories(jsondData.data);
+      console.log("back-end data", jsondData);
+      setCategories(jsondData.newGetCategory);
+    };
+    getCategories();
+  }, []);
+
+  const createCategory = async () => {
+    const data = await fetch("http://localhost:7000/food-category", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ categoryName }),
+    });
+  };
+
+  const handleChange = (e: any) => {
+    const { value } = e.target;
+    setCategoryName(value);
+  };
+
   return (
     <div className="flex w-[1376px]">
       <div className="w-[205px]">
         <NomNom />
       </div>
-      <div className="w-[1171px] h-[582px]">
+      <div className="w-[1171px] h-[582px] ">
+        <div className="flex gap-5 justify-center">
+          {categories?.map((category: any, index: any) => {
+            return <div key={index}>{category.categoryName}</div>;
+          })}
+        </div>
         <div className="w-[28px] h-[28px]">
-          <h2 className="text-[20px]">Appetizers(6)</h2>
+          <h2 className="text-[20px]"></h2>
         </div>
         <div className="w-[1131px] h-[241px] items-center edrounded-lg flex gap-3">
           <div className="relative border-[1px]">
@@ -58,26 +94,27 @@ export default function Dishes() {
                     </Label>
                     <Input
                       id="name"
-                      value="placeholder"
+                      onChange={handleChange}
+                      value={categoryName}
                       className="col-span-3"
                     />
                   </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
+                  {/* <div className="grid grid-cols-4 items-center gap-4">
                     <Label htmlFor="username" className="text-right">
                       Food price
                     </Label>
                     <Input
                       id="username"
-                      value="placeholder"
+                      // value="placeholder"
                       className="col-span-3"
                     />
-                  </div>
-                  <div>
+                  </div> */}
+                  {/* <div>
                     <CloudnaryUpload />
-                  </div>
+                  </div> */}
                 </div>
                 <DialogFooter>
-                  <Button type="submit">Add dishes</Button>
+                  <Button onClick={createCategory}>Add dishes</Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>

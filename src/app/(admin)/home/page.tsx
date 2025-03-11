@@ -47,7 +47,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="w-[1440px]">
+      <div className="w-[1440px] bg-red-500 flex">
         <Image
           width={1440}
           height={570}
