@@ -142,12 +142,16 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu";
 
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -155,15 +159,15 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
-import { NomNom } from "../toggle-menu/page";
-import Image from "next/image";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import { Category } from "@/app/types";
 
 const formSchema = z.object({
   categoryName: z.string().min(2, "CategoryName must be at least 2 characters"),
 });
 
 export default function ProfileFormDishes() {
-  const [categories, setCategories] = useState();
+  const [categories, setCategories] = useState([]);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -172,7 +176,7 @@ export default function ProfileFormDishes() {
   });
 
   const getCategories = async () => {
-    const data = await fetch("http://localhost:4000/food-category");
+    const data = await fetch("http://localhost:7000/food-category");
     const jsonData = await data.json();
     setCategories(jsonData.newGetCategory);
     console.log(jsonData);
@@ -183,7 +187,7 @@ export default function ProfileFormDishes() {
   }, []);
 
   const createCategory = async (category: string) => {
-    const data = await fetch("http://localhost:4000/food-category", {
+    const data = await fetch("http://localhost:7000/food-category", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -193,16 +197,20 @@ export default function ProfileFormDishes() {
     getCategories();
   };
 
-  // const updateCategory = async (putCategory: string) => {
-  //   const data = await fetch("http://localhost:4000/foodCategoryId", {
-  //     method: "PUT",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({ categoryName: putCategory }),
-  //   });
-  //   getCategories;
-  // };
+  const updateCategory = async (id: string) => {
+    const data = await fetch(`http://localhost:7000/food-category/${id}`, {
+      method: "PUT",
+    });
+    getCategories;
+  };
+
+  const deleteCategory = async (id: string) => {
+    const data = await fetch(`http://localhost:7000/food-category/${id}`, {
+      method: "DELETE",
+    });
+
+    getCategories();
+  };
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
@@ -211,39 +219,65 @@ export default function ProfileFormDishes() {
   }
 
   return (
-    <div className="w-[1336px] flex justify-between">
-      <div className="w-[205px]">
-        <NomNom />
-      </div>
+    <div className="w-full px-5">
       <div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <div className="flex gap-10 w-[1123px] h-[84px] m-auto justify-between items-center">
-              {categories?.map((category: any, index: any) => {
-                return <div key={index}>{category.categoryName}</div>;
+            <h1>Dishes category</h1>
+            <div className="flex gap-2 w-full h-[176px] text-nowrap justify-center  items-center">
+              {categories?.map((category: Category, index: number) => {
+                return (
+                  <ContextMenu>
+                    <ContextMenuTrigger>
+                      <div
+                        key={index}
+                        className="rounded-3xl border-[1px] py-2 px-4"
+                      >
+                        {category.categoryName}
+                      </div>
+                    </ContextMenuTrigger>
+                    <ContextMenuContent>
+                      <ContextMenuItem
+                        onClick={() => updateCategory(category._id)}
+                      >
+                        Edit
+                      </ContextMenuItem>
+                      <ContextMenuItem
+                        onClick={() => deleteCategory(category._id)}
+                      >
+                        Delete
+                      </ContextMenuItem>
+                      {/* <ContextMenuItem>Team</ContextMenuItem>
+                      <ContextMenuItem>Subscription</ContextMenuItem> */}
+                    </ContextMenuContent>
+                  </ContextMenu>
+                );
               })}
-              <button className="w-[36px] h-[36px] bg-[#EF4444] rounded-full text-white">
+              <button className="w-[36px] h-[36px] bg-[#EF4444] rounded-full text-white gap-8 px-[16px] items-center justify-center flex py-[8px]">
                 +
               </button>
+              <Dialog>
+                <DialogTrigger>
+                  <FormField
+                    control={form.control}
+                    name="categoryName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Add new category</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Type category name...."
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </DialogTrigger>
+              </Dialog>
             </div>
-            <FormField
-              control={form.control}
-              name="categoryName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Username</FormLabel>
-                  <FormControl>
-                    <Input placeholder="shadcn" {...field} />
-                  </FormControl>
-                  <FormDescription>
-                    This is your public display name.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <Button type="submit">Submit</Button>
+            {/* <Button type="submit">Submit</Button> */}
           </form>
         </Form>
       </div>
