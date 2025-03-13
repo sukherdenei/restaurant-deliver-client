@@ -159,8 +159,17 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Category } from "@/app/types";
+import { Button } from "@/components/ui/button";
+import Image from "next/image";
+import { CloudnaryUpload } from "@/app/_components/Cloudnary";
 
 const formSchema = z.object({
   categoryName: z.string().min(2, "CategoryName must be at least 2 characters"),
@@ -168,6 +177,10 @@ const formSchema = z.object({
 
 export default function ProfileFormDishes() {
   const [categories, setCategories] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const [saveId, setSaveId] = useState<string>("");
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -212,52 +225,61 @@ export default function ProfileFormDishes() {
     getCategories();
   };
 
+  const editHandleClick = (id: string) => {
+    setIsEdit(true);
+    // setSaveId(true);
+  };
+
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
     createCategory(values.categoryName);
+    setIsOpen(false);
     // updateCategory(values.categoryName);
   }
 
   return (
-    <div className="w-full px-5">
+    <div className="w-full justify-center flex ">
       <div>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <h1>Dishes category</h1>
-            <div className="flex gap-2 w-full h-[176px] text-nowrap justify-center  items-center">
-              {categories?.map((category: Category, index: number) => {
-                return (
-                  <ContextMenu>
-                    <ContextMenuTrigger>
-                      <div
-                        key={index}
-                        className="rounded-3xl border-[1px] py-2 px-4"
-                      >
-                        {category.categoryName}
-                      </div>
-                    </ContextMenuTrigger>
-                    <ContextMenuContent>
-                      <ContextMenuItem
-                        onClick={() => updateCategory(category._id)}
-                      >
-                        Edit
-                      </ContextMenuItem>
-                      <ContextMenuItem
-                        onClick={() => deleteCategory(category._id)}
-                      >
-                        Delete
-                      </ContextMenuItem>
-                      {/* <ContextMenuItem>Team</ContextMenuItem>
+        <div>
+          <h1 className="text-[20px]">Dishes category</h1>
+        </div>
+        <div className="flex gap-2 w-full h-[176px] text-nowrap items-center">
+          {categories?.map((category: Category, index: number) => {
+            return (
+              <ContextMenu key={index}>
+                <ContextMenuTrigger>
+                  <button className="rounded-3xl border-[1px] py-2 px-4 hover:border-blue-600">
+                    {category.categoryName}
+                  </button>
+                </ContextMenuTrigger>
+                <ContextMenuContent>
+                  <ContextMenuItem onClick={() => updateCategory(category._id)}>
+                    Edit
+                  </ContextMenuItem>
+                  <ContextMenuItem onClick={() => deleteCategory(category._id)}>
+                    Delete
+                  </ContextMenuItem>
+                  {/* <ContextMenuItem>Team</ContextMenuItem>
                       <ContextMenuItem>Subscription</ContextMenuItem> */}
-                    </ContextMenuContent>
-                  </ContextMenu>
-                );
-              })}
+                </ContextMenuContent>
+              </ContextMenu>
+            );
+          })}
+
+          <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <DialogTrigger asChild>
               <button className="w-[36px] h-[36px] bg-[#EF4444] rounded-full text-white gap-8 px-[16px] items-center justify-center flex py-[8px]">
                 +
               </button>
-              <Dialog>
-                <DialogTrigger>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogTitle></DialogTitle>
+              <DialogDescription></DialogDescription>
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  className="space-y-8"
+                >
                   <FormField
                     control={form.control}
                     name="categoryName"
@@ -274,12 +296,45 @@ export default function ProfileFormDishes() {
                       </FormItem>
                     )}
                   />
-                </DialogTrigger>
-              </Dialog>
+                  <Button type="submit">Add category</Button>
+                </form>
+              </Form>
+            </DialogContent>
+          </Dialog>
+        </div>
+        <div className="w-[1131px] flex gap-[16px]">
+          <div className="w-[239px] h-[225px] border-[1px] rounded-2xl items-center justify-center flex flex-col gap-2">
+            <Button
+              onClick={() => {
+                CloudnaryUpload;
+              }}
+              className="text-white bg-[#EF4444] w-[40px] h-[40px] rounded-full items-center flex"
+            >
+              +
+            </Button>
+            <div className="flex flex-col justify-center items-center">
+              <p className="text-[14px]">Add new Dish to</p>
+              <p className="text-[14px]">Appetizers</p>
             </div>
-            {/* <Button type="submit">Submit</Button> */}
-          </form>
-        </Form>
+          </div>
+          <div className="flex object-contain flex-col w-[241px] items-center border-[1px] rounded-2xl">
+            <div className="flex justify-center p-1">
+              <Image width={238} height={129} src="/Product Image.png" alt="" />
+            </div>
+            <div className="flex gap-[10px] w-[238.75px] h-[32px] items-center">
+              <h2 className="text-[#EF4444] text-[17px] font-medium">
+                Brie Crostini Appetizer
+              </h2>
+              <p className="text-sm">12.99$</p>
+            </div>
+            <div>
+              <p className="text-[12px] font-medium">
+                Fluffy pancakes stacked with fruits, cream, syrup, and powdered
+                sugar.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
