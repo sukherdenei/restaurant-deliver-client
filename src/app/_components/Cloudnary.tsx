@@ -63,7 +63,6 @@ export default function CloudnaryUpload() {
     const file = e.target.files![0];
 
     setFoodImageFile(file);
-    alert("ajilla");
 
     const tempImageUrl = URL.createObjectURL(file);
     setPreviewUrl(tempImageUrl);
@@ -77,7 +76,7 @@ export default function CloudnaryUpload() {
   const createFood = async (values: z.infer<typeof formSchema>) => {
     const imageUrl = await uploadImage(foodImageFile);
 
-    const data = await fetch("http://localhost:4000/food-category", {
+    const data = await fetch("http://localhost:7000/foods", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
