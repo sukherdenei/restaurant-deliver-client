@@ -1,71 +1,4 @@
-// "use client";
-
-// import { useState } from "react";
-// import React from "react";
-
-// export const CloudnaryUpload = () => {
-//   const [file, setFile] = useState(null);
-//   const [image, setImage] = useState("");
-
-//   const PRESET_NAME = "food-delivery-app";
-//   const CLOUDINAY_NAME = "deossi8am";
-
-//   const handleFile = (e: any) => {
-//     const file = e.target.files[0];
-//     if (file) {
-//       setFile(file);
-//       setImage(URL.createObjectURL(file));
-//     }
-//   };
-
-//   const handleUpload = async () => {
-//     console.log("image uploading");
-//     if (!file) {
-//       alert("Pls select a file");
-//       return;
-//     }
-//     const formData = new FormData();
-//     formData.append("file", file);
-//     formData.append("upload_preset", PRESET_NAME);
-//     formData.append("api_key", CLOUDINAY_NAME);
-
-//     try {
-//       const res = await fetch(
-//         `http://api.cloudinary.com/v1_1/${CLOUDINAY_NAME}/upload`,
-//         {
-//           method: "POST",
-//           body: formData,
-//         }
-//       );
-//       const data = await res.json();
-//       setImage(data.secure_url);
-//       console.log("image uploaded", data);
-//     } catch (err) {
-//       console.log(err);
-//       alert("Failed to upload file");
-//       setFile(null);
-//     }
-//     console.log(file);
-//   };
-
-//   return (
-//     <div className="">
-//       <div className="flex justify-center items-center w-full">
-//         <input type="file" onChange={handleFile} />
-//         <button onClick={handleUpload} className="bg-green-500 rounded-lg p-1">
-//           Upload
-//         </button>
-//       </div>
-
-//       {image && (
-//         <img alt="uploaded" src={image} className="w-[300px] h-[300px]" />
-//       )}
-//     </div>
-//   );
-// };
-
 "use client";
-
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -111,11 +44,11 @@ const uploadImage = async (file: File | null) => {
 };
 
 const formSchema = z.object({
-  foodName: z.string().min(2, "Hamgiin bagadaa 2 usegtei baina shuu"),
-  image: z.string().nonempty("Zuragaa oruulna uu"),
+  foodName: z.string().min(3, "minimum of three characters"),
+  image: z.string().nonempty("enter a picture"),
 });
 
-export default function CloudnaryUploadd() {
+export default function CloudnaryUpload() {
   const [foodImageFile, setFoodImageFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>();
   const form = useForm<z.infer<typeof formSchema>>({
@@ -130,6 +63,7 @@ export default function CloudnaryUploadd() {
     const file = e.target.files![0];
 
     setFoodImageFile(file);
+    alert("ajilla");
 
     const tempImageUrl = URL.createObjectURL(file);
     setPreviewUrl(tempImageUrl);
@@ -143,7 +77,7 @@ export default function CloudnaryUploadd() {
   const createFood = async (values: z.infer<typeof formSchema>) => {
     const imageUrl = await uploadImage(foodImageFile);
 
-    const data = await fetch("http://localhost:8000/food", {
+    const data = await fetch("http://localhost:4000/food-category", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -158,7 +92,7 @@ export default function CloudnaryUploadd() {
     });
     const jsonData = await data.json();
 
-    console.log("data", jsonData);
+    console.log("Cloudnary-Data", jsonData);
   };
 
   return (
@@ -172,13 +106,12 @@ export default function CloudnaryUploadd() {
               <FormItem>
                 <FormLabel>Food name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Soup" {...field} />
+                  <Input placeholder="Enter a food" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-
           <FormField
             control={form.control}
             name="image"

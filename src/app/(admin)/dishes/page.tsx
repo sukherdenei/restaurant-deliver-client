@@ -33,10 +33,12 @@ import { Category } from "@/app/types";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Label } from "@/components/ui/label";
-import CloudnaryUploadd from "@/app/_components/Cloudnary";
+import CloudnaryUpload from "@/app/_components/Cloudnary";
 
 const formSchema = z.object({
-  categoryName: z.string().min(2, "CategoryName must be at least 2 characters"),
+  categoryName: z
+    .string()
+    .min(2, "Category name must be at least 2 characters"),
 });
 
 export default function ProfileFormDishes() {
@@ -53,7 +55,7 @@ export default function ProfileFormDishes() {
   });
 
   const getCategories = async () => {
-    const data = await fetch("http://localhost:7000/food-category");
+    const data = await fetch("http://localhost:4000/food-category");
     const jsonData = await data.json();
     setCategories(jsonData.newGetCategory);
     console.log(jsonData);
@@ -64,7 +66,7 @@ export default function ProfileFormDishes() {
   }, []);
 
   const createCategory = async (category: string) => {
-    const data = await fetch("http://localhost:7000/food-category", {
+    const data = await fetch("http://localhost:4000/food-category", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -75,7 +77,7 @@ export default function ProfileFormDishes() {
   };
 
   const updateCategory = async (id: string) => {
-    const data = await fetch(`http://localhost:7000/food-category/${id}`, {
+    const data = await fetch(`http://localhost:4000/food-category/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -90,7 +92,7 @@ export default function ProfileFormDishes() {
   };
 
   const deleteCategory = async (id: string) => {
-    const data = await fetch(`http://localhost:7000/food-category/${id}`, {
+    const data = await fetch(`http://localhost:4000/food-category/${id}`, {
       method: "DELETE",
     });
 
@@ -104,8 +106,8 @@ export default function ProfileFormDishes() {
   }
 
   return (
-    <div className="w-full justify-center flex ">
-      <div>
+    <div className="w-[1300px] justify-center flex ">
+      <div className="flex flex-col w-full">
         <div>
           <h1 className="text-[20px]">Dishes category</h1>
         </div>
@@ -168,7 +170,7 @@ export default function ProfileFormDishes() {
           </Dialog>
           <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-              <button className="w-[36px] h-[36px] bg-[#EF4444] rounded-full text-white gap-8 px-[16px] items-center justify-center flex py-[8px]">
+              <button className="w-[36px] h-[36px] bg-[#EF4444] rounded-full text-white gap-8 px-[16px] items-center justify-center flex py-[8px] hover:bg-red-700 hover:text-white">
                 +
               </button>
             </DialogTrigger>
@@ -202,20 +204,80 @@ export default function ProfileFormDishes() {
             </DialogContent>
           </Dialog>
         </div>
-        <div className="w-[1131px] flex gap-[16px]">
-          <div className="w-[239px] h-[225px] border-[1px] rounded-2xl items-center justify-center flex flex-col gap-2">
-            <Button
-              onClick={() => {
-                CloudnaryUploadd;
-              }}
-              className="text-white bg-[#EF4444] w-[40px] h-[40px] rounded-full items-center flex"
-            >
-              +
-            </Button>
-            <div className="flex flex-col justify-center items-center">
-              <p className="text-[14px]">Add new Dish to</p>
-              <p className="text-[14px]">Appetizers</p>
-            </div>
+        <div className="flex w-full gap-[16px]">
+          <div>
+            {categories.map((category, index) => {
+              return (
+                <div
+                  key={index}
+                  className="w-[239px] h-[225px] border-[1px] rounded-2xl items-center justify-center flex flex-col"
+                >
+                  {category.categoryName}
+                  <div
+                    className=""
+                    // value="@peduarte"
+                  >
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className="text-white bg-[#EF4444] w-[40px] h-[40px] rounded-full items-center flex hover:bg-red-700 hover:text-white"
+                        >
+                          +
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-[425px]">
+                        <DialogHeader>
+                          <DialogTitle>Add new Dish to Appetizers</DialogTitle>
+                        </DialogHeader>
+                        <div className="grid gap-4 py-4">
+                          <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="name" className="text-right">
+                              Food name
+                            </Label>
+                            <Input
+                              id="name"
+                              // value="Pedro Duarte"
+                              className="col-span-3"
+                              placeholder="Type food name"
+                            />
+                          </div>
+                          <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="username" className="text-right">
+                              Food price
+                            </Label>
+                            <Input
+                              id="submit"
+                              // value="@peduarte"
+                              className="col-span-3"
+                              placeholder="Enter price..."
+                            />
+                          </div>
+                          <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="username" className="text-right">
+                              Ingredients
+                            </Label>
+                            <Input
+                              id="submit"
+                              // value="@peduarte"
+                              className="col-span-3"
+                              placeholder="List ingredients...."
+                            />
+                          </div>
+                        </div>
+                        <DialogFooter>
+                          <Button type="submit">Add Dish</Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
+                  </div>
+                  <div className="flex flex-col justify-center items-center">
+                    <p className="text-[14px]">Add new Dish to</p>
+                    <p className="text-[14px]">Appetizers</p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
           <div className="flex object-contain flex-col w-[241px] items-center border-[1px] rounded-2xl">
             <div className="flex justify-center p-1">
@@ -234,6 +296,7 @@ export default function ProfileFormDishes() {
               </p>
             </div>
           </div>
+          <CloudnaryUpload />
         </div>
       </div>
     </div>
