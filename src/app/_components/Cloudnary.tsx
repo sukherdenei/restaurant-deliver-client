@@ -95,7 +95,7 @@ export default function CloudnaryUpload() {
   };
 
   return (
-    <div className="w-screen h-screen flex flex-col justify-center items-center">
+    <div className="flex flex-col justify-center items-center">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
@@ -103,9 +103,9 @@ export default function CloudnaryUpload() {
             name="foodName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Food name</FormLabel>
+                <FormLabel>Food price</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter a food" {...field} />
+                  <Input placeholder="Enter a price" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -129,7 +129,6 @@ export default function CloudnaryUpload() {
               </FormItem>
             )}
           />
-          <Button type="submit">Submit</Button>
         </form>
       </Form>
 
@@ -138,6 +137,7 @@ export default function CloudnaryUpload() {
           <img className="size-48 object-cover" src={previewUrl} alt="" />
         </div>
       )}
+      {/* <Button type="submit">Submit</Button> */}
     </div>
   );
 }

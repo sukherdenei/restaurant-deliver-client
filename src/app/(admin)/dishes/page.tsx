@@ -22,6 +22,7 @@ import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -218,6 +219,7 @@ export default function ProfileFormDishes() {
                     // value="@peduarte"
                   >
                     <Dialog>
+                      <DialogTitle />
                       <DialogTrigger asChild>
                         <Button
                           variant="outline"
@@ -226,53 +228,55 @@ export default function ProfileFormDishes() {
                           +
                         </Button>
                       </DialogTrigger>
-                      <DialogContent className="sm:max-w-[425px]">
-                        <CloudnaryUpload />
+                      <DialogContent className="max-w-[450px]">
                         {/* <DialogHeader>
                           <DialogTitle>Add new Dish to Appetizers</DialogTitle>
-                        </DialogHeader>
-                        <div className="grid gap-4 py-4">
-                          <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="name" className="text-right">
-                              Food name
-                            </Label>
-                            <Input
-                              id="name"
-                              // value="Pedro Duarte"
-                              className="col-span-3"
-                              placeholder="Type food name"
-                            />
-                          </div>
-                          <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="username" className="text-right">
-                              Food price
-                            </Label>
-                            <Input
-                              id="submit"
-                              // value="@peduarte"
-                              className="col-span-3"
-                              placeholder="Enter price..."
-                            />
-                          </div>
-                          <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="username" className="text-right">
-                              Ingredients
-                            </Label>
-                            <Input
-                              id="submit"
-                              // value="@peduarte"
-                              className="col-span-3"
-                              placeholder="List ingredients...."
-                            />
-                          </div>
+                        </DialogHeader> */}
+
+                        {/* <div className="grid gap-4 py-4"> */}
+                        <div>
+                          {/* <Label htmlFor="name">Food name</Label> */}
+                          {/* <Input
+                            id="name"
+                            // value="Pedro Duarte"
+                            // className="col-span-3"
+                            placeholder="Type food name"
+                          /> */}
                         </div>
-                        <DialogFooter>
+                        <div>
+                          <Label htmlFor="username">Food name</Label>
+                          <Input
+                            id="submit"
+                            // value="@peduarte"
+                            // className="col-span-3"
+                            placeholder="Enter a food name..."
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="username">Ingredients</Label>
+                          <Input
+                            id="submit"
+                            // value="@peduarte"
+                            // className="col-span-3"
+                            placeholder="List ingredients...."
+                          />
+                        </div>
+                        <div>
+                          <CloudnaryUpload />
+                        </div>
+                        {/* </div> */}
+                        {/* <DialogFooter>
                           <Button type="submit">Add Dish</Button>
                         </DialogFooter> */}
+                        <DialogFooter className="sm:justify-start">
+                          <DialogClose asChild>
+                            <Button type="submit">Submit</Button>
+                          </DialogClose>
+                        </DialogFooter>
                       </DialogContent>
                     </Dialog>
                   </div>
-                  <div className="flex flex-col justify-center items-center">
+                  <div>
                     <p className="text-[14px]">Add new Dish to</p>
                     <p className="text-[14px]">Appetizers</p>
                   </div>
@@ -297,7 +301,6 @@ export default function ProfileFormDishes() {
               </p>
             </div>
           </div>
-          {/* <CloudnaryUpload /> */}
         </div>
       </div>
     </div>
