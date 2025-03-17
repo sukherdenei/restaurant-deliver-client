@@ -56,7 +56,7 @@ export default function ProfileFormDishes() {
   });
 
   const getCategories = async () => {
-    const data = await fetch("http://localhost:7000/food-category");
+    const data = await fetch("http://localhost:4000/food-category");
     const jsonData = await data.json();
     setCategories(jsonData.newGetCategory);
     console.log(jsonData);
@@ -67,7 +67,7 @@ export default function ProfileFormDishes() {
   }, []);
 
   const createCategory = async (category: string) => {
-    const data = await fetch("http://localhost:7000/food-category", {
+    const data = await fetch("http://localhost:4000/food-category", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -78,7 +78,7 @@ export default function ProfileFormDishes() {
   };
 
   const updateCategory = async (id: string) => {
-    const data = await fetch(`http://localhost:7000/food-category/${id}`, {
+    const data = await fetch(`http://localhost:4000/food-category/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -93,7 +93,7 @@ export default function ProfileFormDishes() {
   };
 
   const deleteCategory = async (id: string) => {
-    const data = await fetch(`http://localhost:7000/food-category/${id}`, {
+    const data = await fetch(`http://localhost:4000/food-category/${id}`, {
       method: "DELETE",
     });
 
@@ -229,26 +229,11 @@ export default function ProfileFormDishes() {
                         </Button>
                       </DialogTrigger>
                       <DialogContent className="max-w-[450px]">
-                        {/* <DialogHeader>
-                          <DialogTitle>Add new Dish to Appetizers</DialogTitle>
-                        </DialogHeader> */}
-
-                        {/* <div className="grid gap-4 py-4"> */}
-                        <div>
-                          {/* <Label htmlFor="name">Food name</Label> */}
-                          {/* <Input
-                            id="name"
-                            // value="Pedro Duarte"
-                            // className="col-span-3"
-                            placeholder="Type food name"
-                          /> */}
-                        </div>
+                        <div></div>
                         <div>
                           <Label htmlFor="username">Food name</Label>
                           <Input
                             id="submit"
-                            // value="@peduarte"
-                            // className="col-span-3"
                             placeholder="Enter a food name..."
                           />
                         </div>
@@ -256,18 +241,14 @@ export default function ProfileFormDishes() {
                           <Label htmlFor="username">Ingredients</Label>
                           <Input
                             id="submit"
-                            // value="@peduarte"
-                            // className="col-span-3"
                             placeholder="List ingredients...."
                           />
                         </div>
+
                         <div>
                           <CloudnaryUpload />
                         </div>
-                        {/* </div> */}
-                        {/* <DialogFooter>
-                          <Button type="submit">Add Dish</Button>
-                        </DialogFooter> */}
+
                         <DialogFooter className="sm:justify-start">
                           <DialogClose asChild>
                             <Button type="submit">Submit</Button>

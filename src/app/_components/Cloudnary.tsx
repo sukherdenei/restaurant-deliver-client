@@ -95,7 +95,7 @@ export default function CloudnaryUpload() {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center">
+    <div className="flex flex-col">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
