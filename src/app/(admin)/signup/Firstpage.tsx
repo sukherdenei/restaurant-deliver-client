@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Dispatch, useState } from "react";
-import { useRouter } from "next/navigation";
 
 export default function Firstpage({
   next,
@@ -25,7 +24,7 @@ export default function Firstpage({
   setmail: Dispatch<string>;
 }) {
   const formSchema = z.object({
-    email: z.string().email({ message: "enter email" }),
+    email: z.string().email({ message: "email pls" }),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -37,7 +36,6 @@ export default function Firstpage({
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
-
     setmail(values.email);
     next();
   }
@@ -50,11 +48,16 @@ export default function Firstpage({
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Enter your email address</FormLabel>
+                <FormLabel className="text-[24px]">
+                  Create your account
+                </FormLabel>
+                <p className="text-[16px]">
+                  Sign up to explore your favorite dishes
+                </p>
                 <FormControl>
                   <Input
                     type="email"
-                    placeholder="email"
+                    placeholder="Enter your email address"
                     className="w-[416px] h-[36px]"
                     {...field}
                   />
@@ -73,6 +76,12 @@ export default function Firstpage({
               Let's Go
             </Button>
           </div>
+          {/* <div className="flex gap-5">
+            <p>Already have an account</p>
+            <Button onClick={"http://localhost:7000/auth/signIn"}>
+              Log in
+            </Button>
+          </div> */}
         </form>
       </Form>
       <div className="mt-5">

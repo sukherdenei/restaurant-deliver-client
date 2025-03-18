@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -17,18 +16,25 @@ import { Input } from "@/components/ui/input";
 
 import { useRouter } from "next/navigation";
 
-export default function Secondpage({ mail }: { mail: string }) {
+export default function Secondpage({
+  mail,
+  next,
+}: {
+  mail: string;
+  next: void;
+}) {
   const router = useRouter();
-  const next = () => router.push("/login");
+  // const next = () => router.push("/login");
 
   const formSchema = z.object({
     password: z
       .string()
-      .min(6, "min 6 charecters!")
-      .max(8, "maximum 8 charecters"),
+      .min(6, "minimum 6 characters password")
+      .max(8, "maximum 8 characters password"),
 
     confirm: z.string(),
   });
+
   // .refine((data) => data.password === data.confirm, {
   //   message: "Passwords don't match",
   //   path: ["confirm"],
@@ -62,6 +68,7 @@ export default function Secondpage({ mail }: { mail: string }) {
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
     addUser(mail, values.password);
+    next();
   }
 
   return (
@@ -95,7 +102,7 @@ export default function Secondpage({ mail }: { mail: string }) {
                 <FormControl>
                   <Input
                     type="password"
-                    placeholder="Confirmpassword"
+                    placeholder="Confirm password"
                     className="w-[416px] h-[36px]"
                     {...field}
                   />
