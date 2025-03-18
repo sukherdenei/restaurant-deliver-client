@@ -43,7 +43,7 @@ const formSchema = z.object({
 });
 
 export default function ProfileFormDishes() {
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [isEdit, setIsEdit] = useState("");
   const [categoryId, setCategoryId] = useState("");
@@ -54,12 +54,11 @@ export default function ProfileFormDishes() {
       categoryName: "",
     },
   });
-
   const getCategories = async () => {
-    const data = await fetch("http://localhost:4000/food-category");
+    const data = await fetch("http://localhost:7000/food-category");
     const jsonData = await data.json();
     setCategories(jsonData.newGetCategory);
-    console.log(jsonData);
+    console.log(jsonData, "link");
   };
 
   useEffect(() => {
@@ -67,7 +66,7 @@ export default function ProfileFormDishes() {
   }, []);
 
   const createCategory = async (category: string) => {
-    const data = await fetch("http://localhost:4000/food-category", {
+    const data = await fetch("http://localhost:7000/food-category", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -78,7 +77,7 @@ export default function ProfileFormDishes() {
   };
 
   const updateCategory = async (id: string) => {
-    const data = await fetch(`http://localhost:4000/food-category/${id}`, {
+    const data = await fetch(`http://localhost:7000/food-category/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -93,15 +92,23 @@ export default function ProfileFormDishes() {
   };
 
   const deleteCategory = async (id: string) => {
-    const data = await fetch(`http://localhost:4000/food-category/${id}`, {
+    const data = await fetch(`http://localhost:7000/food-category/${id}`, {
       method: "DELETE",
     });
 
     getCategories();
   };
 
+  // const data = await fetch("http://localhost:7000/auth/signUp", {
+  //   method: "POST",
+  //   headers: {
+  //     "Content-type": "application/json",
+  //   },
+  //   body: JSON.stringify(),
+  // });
+
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    console.log(values, "values");
     createCategory(values.categoryName);
     setIsOpen(false);
   }
@@ -211,7 +218,7 @@ export default function ProfileFormDishes() {
               return (
                 <div
                   key={index}
-                  className="w-[239px] h-[225px] border-[1px] rounded-2xl items-center justify-center flex flex-col"
+                  className="w-[239px] h-[225px] border-[1px] rounded-2xl items-center justify-center flex flex-col border-dashed border-red-500"
                 >
                   {category.categoryName}
                   <div
@@ -229,7 +236,7 @@ export default function ProfileFormDishes() {
                         </Button>
                       </DialogTrigger>
                       <DialogContent className="max-w-[450px]">
-                        <div></div>
+                        {/* <div></div>
                         <div>
                           <Label htmlFor="username">Food name</Label>
                           <Input
@@ -251,9 +258,36 @@ export default function ProfileFormDishes() {
 
                         <DialogFooter className="sm:justify-start">
                           <DialogClose asChild>
-                            <Button type="submit">Submit</Button>
+                            <Button type="submit">Add Dish</Button>
                           </DialogClose>
-                        </DialogFooter>
+                        </DialogFooter> */}
+                        <Form {...form}>
+                          <form
+                            onSubmit={form.handleSubmit(onSubmit)}
+                            className="space-y-8"
+                          >
+                            <FormField
+                              control={form.control}
+                              name="categoryName"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>Food price</FormLabel>
+                                  <FormControl>
+                                    <Input
+                                      placeholder="Enter a food price...."
+                                      {...field}
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            <div className="w-[412px] flex items-center justify-center rounded-md">
+                              <CloudnaryUpload />
+                            </div>
+                            <Button type="submit">Add dish</Button>
+                          </form>
+                        </Form>
                       </DialogContent>
                     </Dialog>
                   </div>

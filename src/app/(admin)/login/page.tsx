@@ -12,7 +12,7 @@ export default function Register() {
 
         <div className="h-[36px] rounded-lg border-[1px] border-s-stone-400">
           <input
-            type="text"
+            type="email"
             placeholder="Enter your email address"
             className="h-[36px] border-black outline-blue-700 w-[100%] p-2
 "
