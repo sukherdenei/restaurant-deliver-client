@@ -55,7 +55,7 @@ export default function ProfileFormDishes() {
     },
   });
   const getCategories = async () => {
-    const data = await fetch("http://localhost:4000/food-category");
+    const data = await fetch("http://localhost:7000/food-category");
     const jsonData = await data.json();
     setCategories(jsonData.newGetCategory);
     console.log(jsonData, "link");
@@ -66,7 +66,7 @@ export default function ProfileFormDishes() {
   }, []);
 
   const createCategory = async (category: string) => {
-    const data = await fetch("http://localhost:4000/food-category", {
+    const data = await fetch("http://localhost:7000/food-category", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -77,7 +77,7 @@ export default function ProfileFormDishes() {
   };
 
   const updateCategory = async (id: string) => {
-    const data = await fetch(`http://localhost:4000/food-category/${id}`, {
+    const data = await fetch(`http://localhost:7000/food-category/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -92,7 +92,7 @@ export default function ProfileFormDishes() {
   };
 
   const deleteCategory = async (id: string) => {
-    const data = await fetch(`http://localhost:4000/food-category/${id}`, {
+    const data = await fetch(`http://localhost:7000/food-category/${id}`, {
       method: "DELETE",
     });
 
