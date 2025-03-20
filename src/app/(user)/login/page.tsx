@@ -19,8 +19,8 @@ import { toast } from "sonner";
 
 export default function Login({ setmail }: { setmail: Dispatch<string> }) {
   const formSchema = z.object({
-    email: z.string().email({ message: "email pls" }),
-    password: z.string().min(6, "bagda"),
+    email: z.string().email({ message: "enter your email address" }),
+    password: z.string().min(6, "minimum 6 characters password"),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -71,7 +71,7 @@ export default function Login({ setmail }: { setmail: Dispatch<string> }) {
                 <FormControl>
                   <Input
                     type="email"
-                    placeholder="Enter your email address"
+                    placeholder="nomail@gmail.com"
                     className="w-[416px] h-[36px]"
                     {...field}
                   />
@@ -88,7 +88,7 @@ export default function Login({ setmail }: { setmail: Dispatch<string> }) {
                 <FormControl>
                   <Input
                     type="password"
-                    placeholder="Enter your email address"
+                    placeholder="enter you password"
                     className="w-[416px] h-[36px]"
                     {...field}
                   />

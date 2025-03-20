@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -35,14 +34,12 @@ export default function Firstpage({
     },
   });
 
-  //
   const signup = async () => {
     const data = await fetch("http://localhost:7000/auth/signUp");
     const jsonData = await data.json();
     setRegistry(jsonData.newGetCategory);
     console.log(jsonData, "link");
   };
-  //
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
@@ -88,12 +85,6 @@ export default function Firstpage({
               Let's Go
             </Button>
           </div>
-          {/* <div className="flex gap-5">
-            <p>Already have an account</p>
-            <Button onClick={"http://localhost:7000/auth/signIn"}>
-              Log in
-            </Button>
-          </div> */}
         </form>
       </Form>
       <div className="mt-5">

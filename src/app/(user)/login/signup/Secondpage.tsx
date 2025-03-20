@@ -20,19 +20,24 @@ export default function Secondpage({ mail }: { mail: string }) {
   const router = useRouter();
   const next = () => router.push("/login");
 
-  const formSchema = z.object({
-    password: z
-      .string()
-      .min(6, "minimum 6 characters password")
-      .max(8, "maximum 8 characters password"),
+  const formSchema = z
+    .object({
+      password: z
+        .string()
+        .min(6, "minimum 6 characters password")
+        .max(8, "maximum 8 characters password"),
 
-    confirm: z.string(),
-  });
-
-  // .refine((data) => data.password === data.confirm, {
-  //   message: "Passwords don't match",
-  //   path: ["confirm"],
-  // });
+      confirm: z.string(),
+    })
+    .superRefine(({ password, confirm }, ctx) => {
+      if (password !== confirm) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Passwords don't match",
+          path: ["confirm"],
+        });
+      }
+    });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -78,7 +83,7 @@ export default function Secondpage({ mail }: { mail: string }) {
                 <FormControl>
                   <Input
                     type="password"
-                    placeholder="password"
+                    placeholder="enter your password"
                     className="w-[416px] h-[36px]"
                     {...field}
                   />
@@ -92,11 +97,11 @@ export default function Secondpage({ mail }: { mail: string }) {
             name="confirm"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Enter your password</FormLabel>
+                <FormLabel>Confirmation password</FormLabel>
                 <FormControl>
                   <Input
                     type="password"
-                    placeholder="Confirm password"
+                    placeholder="password"
                     className="w-[416px] h-[36px]"
                     {...field}
                   />

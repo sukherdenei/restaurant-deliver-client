@@ -1,8 +1,5 @@
 "use client";
 import { useState } from "react";
-// import Firstpage from "./Firstpage";
-// import Secondpage from "./Secondpage";
-// import ThirdPage from "./Thirdpage";
 import Firstpage from "@/app/(user)/login/signup/Firstpage";
 import Secondpage from "@/app/(user)/login/signup/Secondpage";
 import ThirdPage from "@/app/(user)/login/signup/Thirdpage";

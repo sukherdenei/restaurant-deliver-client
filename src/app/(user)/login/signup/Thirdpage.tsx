@@ -3,7 +3,13 @@ import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import { z } from "zod";
 
-export default function ThirdPage() {
+export default function ThirdPage({
+  mail,
+  password,
+}: {
+  mail: string;
+  password: string;
+}) {
   const formSchema = z.object({
     password: z
       .string()
@@ -12,6 +18,34 @@ export default function ThirdPage() {
 
     confirm: z.string(),
   });
+
+  const addUser = async (email: string, password: string) => {
+    try {
+      const user = await fetch("http://localhost:7000/auth/signIn", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      if (!user.ok) {
+        throw new Error("error");
+      }
+      const data = await user.json();
+      // next();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // function onSubmit(values: z.infer<typeof formSchema>) {
+  //   console.log(values);
+  //   addUser(mail, values.password);
+  //   next();
+  // }
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log(values);
+    addUser(values.password, values.confirm);
+  }
   return (
     <div className="w-[1200px] flex gap-10 m-auto items-center">
       <div className="flex flex-col gap-6 w-[416px] h-[288px] p-10">
