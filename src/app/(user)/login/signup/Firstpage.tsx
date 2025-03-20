@@ -23,6 +23,7 @@ export default function Firstpage({
   next: () => void;
   setmail: Dispatch<string>;
 }) {
+  const [registry, setRegistry] = useState();
   const formSchema = z.object({
     email: z.string().email({ message: "email pls" }),
   });
@@ -34,10 +35,20 @@ export default function Firstpage({
     },
   });
 
+  //
+  const signup = async () => {
+    const data = await fetch("http://localhost:7000/auth/signUp");
+    const jsonData = await data.json();
+    setRegistry(jsonData.newGetCategory);
+    console.log(jsonData, "link");
+  };
+  //
+
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
     setmail(values.email);
     next();
+    signup();
   }
   return (
     <div className="w-[1300px] flex gap-10 m-auto items-center">
@@ -69,6 +80,7 @@ export default function Firstpage({
           <div className="flex flex-col gap-4">
             <div className="flex gap-2"></div>
             <Button
+              onClick={signup}
               type="submit"
               onChange={next}
               className="w-[416px] h-[36px]"

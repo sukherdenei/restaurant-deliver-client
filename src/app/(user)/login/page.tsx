@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { string, z } from "zod";
+import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -13,78 +13,65 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-
+import { Dispatch, useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
-export default function Secondpage({
-  mail,
-  next,
-}: {
-  mail: string;
-  next: void;
-}) {
-  const router = useRouter();
-  // const next = () => router.push("/login");
-
+export default function Login({ setmail }: { setmail: Dispatch<string> }) {
   const formSchema = z.object({
-    password: z
-      .string()
-      .min(6, "minimum 6 characters password")
-      .max(8, "maximum 8 characters password"),
-
-    confirm: z.string(),
+    email: z.string().email({ message: "email pls" }),
+    password: z.string().min(6, "bagda"),
   });
-
-  // .refine((data) => data.password === data.confirm, {
-  //   message: "Passwords don't match",
-  //   path: ["confirm"],
-  // });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      email: "",
       password: "",
-      confirm: "",
     },
   });
-
-  const addUser = async (email: string, password: string) => {
+  const router = useRouter();
+  const signup = async (email: string, password: string) => {
     try {
-      const user = await fetch("http://localhost:7000/auth/signUp", {
+      const data = await fetch("http://localhost:7000/auth/signUp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-      if (!user.ok) {
-        throw new Error("error");
-      }
-      const data = await user.json();
-      next();
+      const jsonData = await data.json();
+      console.log(jsonData, "link");
+      toast.success("Амжилттай нэвтэрлээ!");
+      console.log("Login successful:", jsonData);
     } catch (error) {
-      console.log(error);
+      toast.error("Нэвтрэхэд алдаа гарлаа!");
+      console.error("Error signing in:", error);
     }
+    router.push("/home");
   };
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
-    addUser(mail, values.password);
-    next();
+    signup(values.email, values.password);
   }
-
   return (
     <div className="w-[1300px] flex gap-10 m-auto items-center">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
             control={form.control}
-            name="password"
+            name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Enter your password</FormLabel>
+                <FormLabel className="text-[24px]">
+                  Create your account
+                </FormLabel>
+                <p className="text-[16px]">
+                  Sign up to explore your favorite dishes
+                </p>
                 <FormControl>
                   <Input
-                    type="password"
-                    placeholder="password"
+                    type="email"
+                    placeholder="Enter your email address"
                     className="w-[416px] h-[36px]"
                     {...field}
                   />
@@ -95,14 +82,13 @@ export default function Secondpage({
           />
           <FormField
             control={form.control}
-            name="confirm"
+            name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Enter your password</FormLabel>
                 <FormControl>
                   <Input
                     type="password"
-                    placeholder="Confirm password"
+                    placeholder="Enter your email address"
                     className="w-[416px] h-[36px]"
                     {...field}
                   />
