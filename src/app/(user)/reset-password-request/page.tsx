@@ -14,18 +14,16 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Dispatch, useState } from "react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
-export default function Firstpage({
-  next,
+export default function resetPassReq({
   setmail,
 }: {
-  next: () => void;
   setmail: Dispatch<string>;
 }) {
-  const [registry, setRegistry] = useState();
   const formSchema = z.object({
-    email: z.string().email({ message: "email pls" }),
+    email: z.string().email({ message: "enter your email address" }),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -34,19 +32,37 @@ export default function Firstpage({
       email: "",
     },
   });
-
-  const signup = async () => {
-    const data = await fetch("http://localhost:7000/auth/signUp");
-    const jsonData = await data.json();
-    setRegistry(jsonData.newGetCategory);
-    console.log(jsonData, "link");
+  const router = useRouter();
+  const next = () => {
+    router.push("/reset");
+  };
+  const signup = async (email: string) => {
+    try {
+      const data = await fetch(
+        "http://localhost:7000/auth/reset-password-request",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        }
+      );
+      const jsonData = await data.json();
+      console.log(jsonData, "link");
+      if (!data) {
+      } else {
+      }
+      toast.success("Амжилттай имэйл илгээлээ!");
+      console.log("Login successful:", jsonData);
+      next();
+    } catch (error) {
+      toast.error("Нэвтрэхэд алдаа гарлаа!");
+      console.error("Error signing in:", error);
+    }
   };
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
-    setmail(values.email);
-    next();
-    signup();
+    signup(values.email);
   }
   return (
     <div className="w-[1300px] flex gap-10 m-auto items-center">
@@ -57,16 +73,12 @@ export default function Firstpage({
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-[24px]">
-                  Create your account
-                </FormLabel>
-                <p className="text-[16px]">
-                  Sign up to explore your favorite dishes
-                </p>
+                <FormLabel className="text-[24px]">Reset password</FormLabel>
+                {/* <p className="text-[16px]">reset</p> */}
                 <FormControl>
                   <Input
                     type="email"
-                    placeholder="Enter your email address"
+                    placeholder="enter your email"
                     className="w-[416px] h-[36px]"
                     {...field}
                   />
@@ -75,24 +87,14 @@ export default function Firstpage({
               </FormItem>
             )}
           />
+
           <div className="flex flex-col gap-4">
             <div className="flex gap-2"></div>
-            <Button
-              onClick={signup}
-              type="submit"
-              onChange={next}
-              className="w-[416px] h-[36px]"
-            >
-              Let's Go
+            <Button type="submit" className="w-[416px] h-[36px]">
+              Send link
             </Button>
           </div>
         </form>
-        <div className="flex gap-5">
-          <Link href="/login">
-            <Button>Sign In</Button>
-          </Link>
-          <p>Already have an account?</p>
-        </div>
       </Form>
       <div className="mt-5">
         <Image

@@ -16,9 +16,12 @@ import { Input } from "@/components/ui/input";
 import { Dispatch, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import Link from "next/link";
 
-export default function Login({ setmail }: { setmail: Dispatch<string> }) {
+export default function resetPassReq({
+  setmail,
+}: {
+  setmail: Dispatch<string>;
+}) {
   const formSchema = z.object({
     email: z.string().email({ message: "enter your email address" }),
     password: z.string().min(6, "minimum 6 characters password"),
@@ -34,7 +37,7 @@ export default function Login({ setmail }: { setmail: Dispatch<string> }) {
   const router = useRouter();
   const signup = async (email: string, password: string) => {
     try {
-      const data = await fetch("http://localhost:7000/auth/signIn", {
+      const data = await fetch("http://localhost:7000/auth/reset-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -46,7 +49,7 @@ export default function Login({ setmail }: { setmail: Dispatch<string> }) {
       }
       toast.success("Амжилттай нэвтэрлээ!");
       console.log("Login successful:", jsonData);
-      router.push("/home");
+      router.push("/reset");
     } catch (error) {
       toast.error("Нэвтрэхэд алдаа гарлаа!");
       console.error("Error signing in:", error);
@@ -66,16 +69,12 @@ export default function Login({ setmail }: { setmail: Dispatch<string> }) {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-[24px]">
-                  Create your account
-                </FormLabel>
-                <p className="text-[16px]">
-                  Sign up to explore your favorite dishes
-                </p>
+                <FormLabel className="text-[24px]">Reset password</FormLabel>
+                {/* <p className="text-[16px]">reset</p> */}
                 <FormControl>
                   <Input
-                    type="email"
-                    placeholder="nomail@gmail.com"
+                    type="password"
+                    placeholder="enter your email"
                     className="w-[416px] h-[36px]"
                     {...field}
                   />
@@ -92,7 +91,7 @@ export default function Login({ setmail }: { setmail: Dispatch<string> }) {
                 <FormControl>
                   <Input
                     type="password"
-                    placeholder="enter you password"
+                    placeholder="reset password"
                     className="w-[416px] h-[36px]"
                     {...field}
                   />
@@ -109,14 +108,6 @@ export default function Login({ setmail }: { setmail: Dispatch<string> }) {
           </div>
         </form>
       </Form>
-      <div className="flex gap-5">
-        <Link href="/reset-password-request">
-          <Button>Reset password</Button>
-        </Link>
-        <Link href={"http://localhost:3000/"}>
-          <Button>Sign Up</Button>
-        </Link>
-      </div>
       <div className="mt-5">
         <Image
           width={800}
