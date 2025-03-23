@@ -15,10 +15,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
-const UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!;
-const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+export const UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!;
+export const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
 
-const uploadImage = async (file: File | null) => {
+export const uploadImage = async (file: File | null) => {
   if (!file) {
     return null;
   }
@@ -43,7 +43,7 @@ const uploadImage = async (file: File | null) => {
   }
 };
 
-const formSchema = z.object({
+export const formSchema = z.object({
   foodName: z.string().min(3, "minimum of three characters"),
   image: z.string().nonempty("enter a picture"),
 });

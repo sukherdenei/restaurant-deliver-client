@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { z } from "zod";
+import { string, z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -13,69 +13,77 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Dispatch, useState } from "react";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
-import Link from "next/link";
 
-export default function Login({ setmail }: { setmail: Dispatch<string> }) {
+export default function Secondpage({
+  mail,
+  next,
+}: {
+  mail: string;
+  next: void;
+}) {
+  const router = useRouter();
+  // const next = () => router.push("/login");
+
   const formSchema = z.object({
-    email: z.string().email({ message: "enter your email address" }),
-    password: z.string().min(6, "minimum 6 characters password"),
+    password: z
+      .string()
+      .min(6, "minimum 6 characters password")
+      .max(8, "maximum 8 characters password"),
+
+    confirm: z.string(),
   });
+
+  // .refine((data) => data.password === data.confirm, {
+  //   message: "Passwords don't match",
+  //   path: ["confirm"],
+  // });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "",
       password: "",
+      confirm: "",
     },
   });
-  const router = useRouter();
-  const signin = async (email: string, password: string) => {
+
+  const addUser = async (email: string, password: string) => {
     try {
-      const data = await fetch("http://localhost:4000/auth/signIn", {
+      const user = await fetch("http://localhost:7000/auth/signUp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-      const jsonData = await data.json();
-      console.log(jsonData, "link");
-      if (!data.ok) {
-        throw new Error();
+      if (!user.ok) {
+        throw new Error("error");
       }
-      toast.success("Амжилттай нэвтэрлээ!");
-      console.log("Login successful:", jsonData);
-      router.push("/home");
+      const data = await user.json();
+      next();
     } catch (error) {
-      toast.error("Нэвтрэхэд алдаа гарлаа!");
-      console.error("Error signing in:", error);
+      console.log(error);
     }
   };
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
-    signin(values.email, values.password);
+    addUser(mail, values.password);
+    next();
   }
+
   return (
     <div className="w-[1300px] flex gap-10 m-auto items-center">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
             control={form.control}
-            name="email"
+            name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-[24px]">
-                  Create your account
-                </FormLabel>
-                <p className="text-[16px]">
-                  Sign up to explore your favorite dishes
-                </p>
+                <FormLabel>Enter your password</FormLabel>
                 <FormControl>
                   <Input
-                    type="email"
-                    placeholder="nomail@gmail.com"
+                    type="password"
+                    placeholder="password"
                     className="w-[416px] h-[36px]"
                     {...field}
                   />
@@ -86,13 +94,14 @@ export default function Login({ setmail }: { setmail: Dispatch<string> }) {
           />
           <FormField
             control={form.control}
-            name="password"
+            name="confirm"
             render={({ field }) => (
               <FormItem>
+                <FormLabel>Enter your password</FormLabel>
                 <FormControl>
                   <Input
                     type="password"
-                    placeholder="enter you password"
+                    placeholder="Confirm password"
                     className="w-[416px] h-[36px]"
                     {...field}
                   />
@@ -109,14 +118,6 @@ export default function Login({ setmail }: { setmail: Dispatch<string> }) {
           </div>
         </form>
       </Form>
-      <div className="flex gap-5">
-        <Link href="/reset-password-request">
-          <Button>Reset password</Button>
-        </Link>
-        <Link href={"http://localhost:3000/"}>
-          <Button>Sign Up</Button>
-        </Link>
-      </div>
       <div className="mt-5">
         <Image
           width={800}

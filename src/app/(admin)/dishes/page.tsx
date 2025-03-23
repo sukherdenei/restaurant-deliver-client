@@ -55,7 +55,7 @@ export default function ProfileFormDishes() {
     },
   });
   const getCategories = async () => {
-    const data = await fetch("http://localhost:7000/food-category");
+    const data = await fetch("http://localhost:4000/food-category");
     const jsonData = await data.json();
     setCategories(jsonData.newGetCategory);
     console.log(jsonData, "link");
@@ -66,7 +66,7 @@ export default function ProfileFormDishes() {
   }, []);
 
   const createCategory = async (category: string) => {
-    const data = await fetch("http://localhost:7000/food-category", {
+    const data = await fetch("http://localhost:4000/food-category", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -92,7 +92,7 @@ export default function ProfileFormDishes() {
   };
 
   const deleteCategory = async (id: string) => {
-    const data = await fetch(`http://localhost:7000/food-category/${id}`, {
+    const data = await fetch(`http://localhost:4000/food-category/${id}`, {
       method: "DELETE",
     });
 
@@ -106,6 +106,27 @@ export default function ProfileFormDishes() {
   //   },
   //   body: JSON.stringify(),
   // });
+
+  // const createFood = async (values: z.infer<typeof formSchema>) => {
+  //   const imageUrl = await uploadImage(foodImageFile);
+
+  //   const data = await fetch("http://localhost:7000/foods", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       foodName: values,
+  //       price: 100,
+  //       // image: imageUrl,
+  //       ingredients: "guril mah",
+  //       category: "676e370164d1f8cafda026ac",
+  //     }),
+  //   });
+  //   const jsonData = await data.json();
+
+  //   console.log("Cloudnary-Data", jsonData);
+  // };
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values, "values");
