@@ -30,11 +30,11 @@ export const Sidebarr = () => {
           </Toggle>
         </Link>
         <Toggle className="h-[40px] hover:bg-black hover:text-white">
-          <img src="/Vector.svg" alt="" />
+          <Image width={0} height={0} src="/Vector.svg" alt="" />
           Orders
         </Toggle>
         <Toggle className="h-[40px] hover:text-white hover:bg-black">
-          <img src="/Settings Icon.svg" alt="" />
+          <Image width={0} height={0} src="/Settings Icon.svg" alt="" />
           Settings
         </Toggle>
       </div>

@@ -13,15 +13,31 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Dispatch, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { toast } from "sonner";
 
-export default function resetPassReq() {
-  const formSchema = z.object({
-    password: z.string().min(6, "minimum 6 characters password"),
-    confirm: z.string().min(6, "baga6").max(12, "max12"),
-  });
+import { useRouter } from "next/navigation";
+
+export default function Secondpage({ mail }: { mail: string }) {
+  const router = useRouter();
+  const next = () => router.push("/login");
+
+  const formSchema = z
+    .object({
+      password: z
+        .string()
+        .min(6, "minimum 6 characters password")
+        .max(8, "maximum 8 characters password"),
+
+      confirm: z.string(),
+    })
+    .superRefine(({ password, confirm }, ctx) => {
+      if (password !== confirm) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Passwords don't match",
+          path: ["confirm"],
+        });
+      }
+    });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -30,45 +46,28 @@ export default function resetPassReq() {
       confirm: "",
     },
   });
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const token = searchParams.get("id");
-  if (!token) {
-    return (
-      <div>
-        <h1>Please verify Your Email</h1>
-        <p>
-          We just sent an email to Test@gmail.com. Click the link in the email
-          to verify your account.
-        </p>
-        <Button>Resend email</Button>
-      </div>
-    );
-  }
-  const signup = async (id: string, password: string) => {
+
+  const addUser = async (email: string, password: string) => {
     try {
-      const data = await fetch("http://localhost:4000/auth/reset-password", {
+      const user = await fetch("http://localhost:7000/auth/signUp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password, token }),
+        body: JSON.stringify({ email, password }),
       });
-      const jsonData = await data.json();
-      console.log(jsonData, "link");
-      if (!data.ok) {
-        throw new Error();
+      if (!user.ok) {
+        throw new Error("error");
       }
-      toast.success("Амжилттай нэвтэрлээ!");
-      console.log("Login successful:", jsonData);
-      router.push("/login");
+      const data = await user.json();
+      next();
     } catch (error) {
-      toast.error("Нэвтрэхэд алдаа гарлаа!");
-      console.error("Error signing in:", error);
+      console.log(error);
     }
   };
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
-    signup(values.password, token!);
+    addUser(mail, values.password);
+    next();
   }
 
   return (
@@ -80,7 +79,7 @@ export default function resetPassReq() {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-[24px]">Reset password</FormLabel>
+                <FormLabel>Enter your password</FormLabel>
                 <FormControl>
                   <Input
                     type="password"
@@ -98,10 +97,11 @@ export default function resetPassReq() {
             name="confirm"
             render={({ field }) => (
               <FormItem>
+                <FormLabel>Confirmation password</FormLabel>
                 <FormControl>
                   <Input
                     type="password"
-                    placeholder="confirm password"
+                    placeholder="password"
                     className="w-[416px] h-[36px]"
                     {...field}
                   />

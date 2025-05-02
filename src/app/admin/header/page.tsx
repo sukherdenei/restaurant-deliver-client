@@ -1,9 +1,17 @@
+import Image from "next/image";
+
 export default function Home() {
   return (
     <div className="flex w-[full] h-[68px] bg-black justify-between items-center p-3 px-24">
       <div className="flex gap-3 items-center">
         <div>
-          <img src="/Traced.png" alt="" className="w-[46px] h-[37px]" />
+          <Image
+            width={46}
+            height={37}
+            src="/Traced.png"
+            alt=""
+            className="w-[46px] h-[37px]"
+          />
         </div>
         <div>
           <div className="flex">

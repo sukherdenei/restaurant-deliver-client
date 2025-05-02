@@ -3,13 +3,7 @@ import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import { z } from "zod";
 
-export default function ThirdPage({
-  mail,
-  password,
-}: {
-  mail: string;
-  password: string;
-}) {
+export default function ThirdPage({ mail }: { mail: string }) {
   const formSchema = z.object({
     password: z
       .string()
@@ -49,7 +43,13 @@ export default function ThirdPage({
   return (
     <div className="w-[1200px] flex gap-10 m-auto items-center">
       <div className="flex flex-col gap-6 w-[416px] h-[288px] p-10">
-        <img src="/chevron-left.png" alt="" className="w-[16px] h-[16px]" />
+        <Image
+          width={16}
+          height={16}
+          src="/chevron-left.png"
+          alt=""
+          className="w-[16px] h-[16px]"
+        />
         <div className="h-[60px]">
           <h1 className="h-[32px] text-[24px]">Sign in</h1>
           <p className="text-[16px]">Sign up to explore your favorite dishes</p>

@@ -12,8 +12,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import Image from "next/image";
 
 export const UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!;
 export const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
@@ -38,7 +38,7 @@ export const uploadImage = async (file: File | null) => {
     const result = await response.json();
 
     return result.secure_url;
-  } catch (error: unknown) {
+  } catch {
     return { error: "failed to upload image" };
   }
 };
@@ -134,7 +134,13 @@ export default function CloudnaryUpload() {
 
       {previewUrl && (
         <div className="border">
-          <img className="size-48 object-cover" src={previewUrl} alt="" />
+          <Image
+            width={0}
+            height={0}
+            className="size-48 object-cover"
+            src={previewUrl}
+            alt=""
+          />
         </div>
       )}
       {/* <Button type="submit">Submit</Button> */}

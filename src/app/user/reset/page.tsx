@@ -13,100 +13,78 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Dispatch, useState } from "react";
-import { useRouter } from "next/navigation";
+import { Dispatch } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
-import Link from "next/link";
 
-export default function Login({ setmail }: { setmail: Dispatch<string> }) {
+export default function resetPassReq() {
   const formSchema = z.object({
-    email: z.string().email({ message: "enter your email address" }),
     password: z.string().min(6, "minimum 6 characters password"),
+    confirm: z.string().min(6, "baga6").max(12, "max12"),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "",
       password: "",
+      confirm: "",
     },
   });
   const router = useRouter();
-  // const signin = async (email: string, password: string) => {
-  //   try {
-  //     const data = await fetch("http://localhost:7000/auth/signIn", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({ email, password }),
-  //     });
-  //     const jsonData = await data.json();
-  //     console.log(jsonData, "link");
-  //     if (!data.ok) {
-  //       throw new Error();
-  //     }
-  //     toast.success("Амжилттай нэвтэрлээ!");
-  //     console.log("Login successful:", jsonData);
-  //     router.push("/home");
-  //   } catch (error) {
-  //     toast.error("Нэвтрэхэд алдаа гарлаа!");
-  //     console.error("Error signing in:", error);
-  //   }
-  // };
-  const signin = async (email: string, password: string) => {
+  const searchParams = useSearchParams();
+  const token = searchParams.get("id");
+  if (!token) {
+    return (
+      <div>
+        <h1>Please verify Your Email</h1>
+        <p>
+          We just sent an email to Test@gmail.com. Click the link in the email
+          to verify your account.
+        </p>
+        <Button>Resend email</Button>
+      </div>
+    );
+  }
+  const signup = async (id: string, password: string) => {
     try {
-      const response = await fetch("http://localhost:7000/auth/signIn", {
+      const data = await fetch("http://localhost:4000/auth/reset-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ password, token }),
       });
-
-      // Check if the response is ok
-      if (!response.ok) {
-        // Handle non-OK responses, e.g., 400, 500, etc.
-        const errorData = await response.json();
-        throw new Error(
-          errorData.message || "An error occurred while signing in"
-        );
-      }
-
-      const jsonData = await response.json();
+      const jsonData = await data.json();
       console.log(jsonData, "link");
-
+      if (!data.ok) {
+        throw new Error();
+      }
       toast.success("Амжилттай нэвтэрлээ!");
       console.log("Login successful:", jsonData);
-
-      // Assuming you have a router and it's using a hook to redirect
-      router.push("/home");
+      router.push("/login");
     } catch (error) {
-      // Catch both the response errors and any network errors
-      toast.error(`Нэвтрэхэд алдаа гарлаа!`);
+      toast.error("Нэвтрэхэд алдаа гарлаа!");
       console.error("Error signing in:", error);
     }
   };
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
-    signin(values.email, values.password);
+    signup(values.password, token!);
   }
+
   return (
     <div className="w-[1300px] flex gap-10 m-auto items-center">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
             control={form.control}
-            name="email"
+            name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-[24px]">
-                  Create your account
-                </FormLabel>
-                <p className="text-[16px]">
-                  Sign up to explore your favorite dishes
-                </p>
+                <FormLabel className="text-[24px]">Reset password</FormLabel>
                 <FormControl>
                   <Input
-                    type="email"
-                    placeholder="nomail@gmail.com"
+                    type="password"
+                    placeholder="enter your password"
                     className="w-[416px] h-[36px]"
                     {...field}
                   />
@@ -117,13 +95,13 @@ export default function Login({ setmail }: { setmail: Dispatch<string> }) {
           />
           <FormField
             control={form.control}
-            name="password"
+            name="confirm"
             render={({ field }) => (
               <FormItem>
                 <FormControl>
                   <Input
                     type="password"
-                    placeholder="enter you password"
+                    placeholder="confirm password"
                     className="w-[416px] h-[36px]"
                     {...field}
                   />
@@ -140,14 +118,6 @@ export default function Login({ setmail }: { setmail: Dispatch<string> }) {
           </div>
         </form>
       </Form>
-      <div className="flex gap-5">
-        <Link href="/reset-password-request">
-          <Button>Reset password</Button>
-        </Link>
-        <Link href={"http://localhost:3000/"}>
-          <Button>Sign Up</Button>
-        </Link>
-      </div>
       <div className="mt-5">
         <Image
           width={800}

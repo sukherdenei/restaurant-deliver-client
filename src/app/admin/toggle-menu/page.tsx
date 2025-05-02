@@ -21,15 +21,15 @@ export const NomNom = () => {
       </div>
       <div className="flex flex-col gap-[8px]">
         <Toggle className="h-[40px] w-[165px]">
-          <img src="/Dashboard Icon.svg" alt="" />
+          <Image width={0} height={0} src="/Dashboard Icon.svg" alt="" />
           Food menu
         </Toggle>
         <Toggle className="h-[40px]">
-          <img src="/Vector.svg" alt="" />
+          <Image width={0} height={0} src="/Vector.svg" alt="" />
           Orders
         </Toggle>
         <Toggle className="h-[40px]">
-          <img src="/Settings Icon.svg" alt="" />
+          <Image width={0} height={0} src="/Settings Icon.svg" alt="" />
           Settings
         </Toggle>
       </div>

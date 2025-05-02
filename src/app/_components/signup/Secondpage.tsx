@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { string, z } from "zod";
+import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useRouter } from "next/navigation";
 
 export default function Secondpage({
   mail,
@@ -22,9 +21,6 @@ export default function Secondpage({
   mail: string;
   next: void;
 }) {
-  const router = useRouter();
-  // const next = () => router.push("/login");
-
   const formSchema = z.object({
     password: z
       .string()
@@ -33,11 +29,6 @@ export default function Secondpage({
 
     confirm: z.string(),
   });
-
-  // .refine((data) => data.password === data.confirm, {
-  //   message: "Passwords don't match",
-  //   path: ["confirm"],
-  // });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

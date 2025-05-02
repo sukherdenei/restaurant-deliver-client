@@ -22,7 +22,6 @@ import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -52,9 +51,7 @@ export default function ProfileFormDishes() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files![0];
-
     setFoodImageFile(file);
-
     const tempImageUrl = URL.createObjectURL(file);
     setPreviewUrl(tempImageUrl);
   };
@@ -97,10 +94,16 @@ export default function ProfileFormDishes() {
     });
     getCategories();
   };
+
   const handleclick = (e: any) => {
     const { value } = e.target;
     setIsEdit(value);
   };
+
+  // const handleclick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  //   const value = e.currentTarget.value;
+  //   setIsEdit(value);
+  // };
 
   const deleteCategory = async (id: string) => {
     const data = await fetch(`http://localhost:7000/food-category/${id}`, {
@@ -325,7 +328,9 @@ export default function ProfileFormDishes() {
 
                               {previewUrl && (
                                 <div className="border">
-                                  <img
+                                  <Image
+                                    width={0}
+                                    height={0}
                                     className="size-48 object-cover"
                                     src={previewUrl}
                                     alt=""

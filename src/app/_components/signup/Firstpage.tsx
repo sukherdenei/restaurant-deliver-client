@@ -7,14 +7,13 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Dispatch, useState } from "react";
+import { Dispatch } from "react";
 
 export default function Firstpage({
   next,
@@ -76,12 +75,6 @@ export default function Firstpage({
               Let's Go
             </Button>
           </div>
-          {/* <div className="flex gap-5">
-            <p>Already have an account</p>
-            <Button onClick={"http://localhost:7000/auth/signIn"}>
-              Log in
-            </Button>
-          </div> */}
         </form>
       </Form>
       <div className="mt-5">

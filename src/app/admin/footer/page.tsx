@@ -1,9 +1,17 @@
 import { FacebookIcon, InstagramIcon } from "lucide-react";
+import Image from "next/image";
 
 export default function Footer() {
   return (
     <div className="w-full bg-black flex flex-col py-10 gap-20">
       <div className="flex w-[full] gap-8 h-[92px] bg-red-600 text-white items-center justify-center">
+        {/* {Array.from(Array(5)).map((_: any, index: any) => {
+          return (
+            <div key={index} className="h-[36px] text-[30px]">
+              {"Fresh fast delivered "}
+            </div>
+          );
+        })} */}
         {Array.from(Array(5)).map((_: any, index: any) => {
           return (
             <div key={index} className="h-[36px] text-[30px]">
@@ -15,7 +23,13 @@ export default function Footer() {
       <div className="bg-black h-[255px] flex w-[1264px] gap-[220px] m-auto ">
         <div className="flex gap-3 items-start flex-col">
           <div>
-            <img src="/Traced.png" alt="" className="w-[46px] h-[37px]" />
+            <Image
+              width={0}
+              height={0}
+              src="/Traced.png"
+              alt=""
+              className="w-[46px] h-[37px]"
+            />
           </div>
           <div>
             <div className="flex">
