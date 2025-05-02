@@ -23,10 +23,12 @@ export const Sidebarr = () => {
         </div>
       </Link>
       <div className="flex flex-col gap-[8px]">
-        <Toggle className="h-[40px] w-[165px] hover:bg-black hover:text-white">
-          <img src="/Dashboard Icon.svg" alt="" />
-          Food menu
-        </Toggle>
+        <Link href={"/dishes"}>
+          <Toggle className="h-[40px] w-[165px] hover:bg-black hover:text-white">
+            <Image src="/Dashboard Icon.svg" alt="" width={0} height={0} />
+            Food menu
+          </Toggle>
+        </Link>
         <Toggle className="h-[40px] hover:bg-black hover:text-white">
           <img src="/Vector.svg" alt="" />
           Orders

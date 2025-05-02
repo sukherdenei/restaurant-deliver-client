@@ -34,7 +34,7 @@ import { Category } from "@/app/types";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Label } from "@/components/ui/label";
-import CloudnaryUpload from "@/app/_components/Cloudnary";
+import CloudnaryUpload, { uploadImage } from "@/app/_components/Cloudnary";
 
 const formSchema = z.object({
   categoryName: z
@@ -47,6 +47,17 @@ export default function ProfileFormDishes() {
   const [isOpen, setIsOpen] = useState(false);
   const [isEdit, setIsEdit] = useState("");
   const [categoryId, setCategoryId] = useState("");
+  const [foodImageFile, setFoodImageFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string>();
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files![0];
+
+    setFoodImageFile(file);
+
+    const tempImageUrl = URL.createObjectURL(file);
+    setPreviewUrl(tempImageUrl);
+  };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -55,7 +66,7 @@ export default function ProfileFormDishes() {
     },
   });
   const getCategories = async () => {
-    const data = await fetch("http://localhost:4000/food-category");
+    const data = await fetch("http://localhost:7000/food-category");
     const jsonData = await data.json();
     setCategories(jsonData.newGetCategory);
     console.log(jsonData, "link");
@@ -66,7 +77,7 @@ export default function ProfileFormDishes() {
   }, []);
 
   const createCategory = async (category: string) => {
-    const data = await fetch("http://localhost:4000/food-category", {
+    const data = await fetch("http://localhost:7000/food-category", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -92,12 +103,40 @@ export default function ProfileFormDishes() {
   };
 
   const deleteCategory = async (id: string) => {
-    const data = await fetch(`http://localhost:4000/food-category/${id}`, {
+    const data = await fetch(`http://localhost:7000/food-category/${id}`, {
       method: "DELETE",
     });
 
     getCategories();
   };
+
+  const createFood = async (values: z.infer<typeof formSchema>) => {
+    const imageUrl = await uploadImage(foodImageFile);
+
+    const data = await fetch("http://localhost:7000/foods", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        foodName: values.categoryName,
+        price: 100,
+        image: imageUrl,
+        ingredients: "guril mah",
+        category: "676e370164d1f8cafda026ac",
+      }),
+    });
+    const jsonData = await data.json();
+
+    console.log("Cloudnary-Data", jsonData);
+  };
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log(values, "values");
+    createCategory(values.categoryName);
+    setIsOpen(false);
+    createFood(values);
+  }
 
   // const data = await fetch("http://localhost:7000/auth/signUp", {
   //   method: "POST",
@@ -106,33 +145,6 @@ export default function ProfileFormDishes() {
   //   },
   //   body: JSON.stringify(),
   // });
-
-  // const createFood = async (values: z.infer<typeof formSchema>) => {
-  //   const imageUrl = await uploadImage(foodImageFile);
-
-  //   const data = await fetch("http://localhost:7000/foods", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       foodName: values,
-  //       price: 100,
-  //       // image: imageUrl,
-  //       ingredients: "guril mah",
-  //       category: "676e370164d1f8cafda026ac",
-  //     }),
-  //   });
-  //   const jsonData = await data.json();
-
-  //   console.log("Cloudnary-Data", jsonData);
-  // };
-
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values, "values");
-    createCategory(values.categoryName);
-    setIsOpen(false);
-  }
 
   return (
     <div className="w-[1300px] justify-center flex ">
@@ -257,8 +269,7 @@ export default function ProfileFormDishes() {
                         </Button>
                       </DialogTrigger>
                       <DialogContent className="max-w-[450px]">
-                        {/* <div></div>
-                        <div>
+                        {/* <div>
                           <Label htmlFor="username">Food name</Label>
                           <Input
                             id="submit"
@@ -271,12 +282,12 @@ export default function ProfileFormDishes() {
                             id="submit"
                             placeholder="List ingredients...."
                           />
-                        </div>
+                        </div> */}
 
-                        <div>
+                        {/* <div>
                           <CloudnaryUpload />
-                        </div>
-
+                        </div> */}
+                        {/* 
                         <DialogFooter className="sm:justify-start">
                           <DialogClose asChild>
                             <Button type="submit">Add Dish</Button>
@@ -304,7 +315,23 @@ export default function ProfileFormDishes() {
                               )}
                             />
                             <div className="w-[412px] flex items-center justify-center rounded-md">
-                              <CloudnaryUpload />
+                              {/* <CloudnaryUpload />
+                               */}
+                              <Input
+                                placeholder="image"
+                                type="file"
+                                onChange={handleChange}
+                              />
+
+                              {previewUrl && (
+                                <div className="border">
+                                  <img
+                                    className="size-48 object-cover"
+                                    src={previewUrl}
+                                    alt=""
+                                  />
+                                </div>
+                              )}
                             </div>
                             <Button type="submit">Add dish</Button>
                           </form>

@@ -32,23 +32,54 @@ export default function Login({ setmail }: { setmail: Dispatch<string> }) {
     },
   });
   const router = useRouter();
+  // const signin = async (email: string, password: string) => {
+  //   try {
+  //     const data = await fetch("http://localhost:7000/auth/signIn", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({ email, password }),
+  //     });
+  //     const jsonData = await data.json();
+  //     console.log(jsonData, "link");
+  //     if (!data.ok) {
+  //       throw new Error();
+  //     }
+  //     toast.success("Амжилттай нэвтэрлээ!");
+  //     console.log("Login successful:", jsonData);
+  //     router.push("/home");
+  //   } catch (error) {
+  //     toast.error("Нэвтрэхэд алдаа гарлаа!");
+  //     console.error("Error signing in:", error);
+  //   }
+  // };
   const signin = async (email: string, password: string) => {
     try {
-      const data = await fetch("http://localhost:4000/auth/signIn", {
+      const response = await fetch("http://localhost:7000/auth/signIn", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-      const jsonData = await data.json();
-      console.log(jsonData, "link");
-      if (!data.ok) {
-        throw new Error();
+
+      // Check if the response is ok
+      if (!response.ok) {
+        // Handle non-OK responses, e.g., 400, 500, etc.
+        const errorData = await response.json();
+        throw new Error(
+          errorData.message || "An error occurred while signing in"
+        );
       }
+
+      const jsonData = await response.json();
+      console.log(jsonData, "link");
+
       toast.success("Амжилттай нэвтэрлээ!");
       console.log("Login successful:", jsonData);
+
+      // Assuming you have a router and it's using a hook to redirect
       router.push("/home");
     } catch (error) {
-      toast.error("Нэвтрэхэд алдаа гарлаа!");
+      // Catch both the response errors and any network errors
+      toast.error(`Нэвтрэхэд алдаа гарлаа!`);
       console.error("Error signing in:", error);
     }
   };

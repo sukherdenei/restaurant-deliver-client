@@ -47,7 +47,7 @@ export default function resetPassReq() {
   }
   const signup = async (id: string, password: string) => {
     try {
-      const data = await fetch("http://localhost:7000/auth/reset-password", {
+      const data = await fetch("http://localhost:4000/auth/reset-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ password, token }),
@@ -70,6 +70,7 @@ export default function resetPassReq() {
     console.log(values);
     signup(values.password, token!);
   }
+
   return (
     <div className="w-[1300px] flex gap-10 m-auto items-center">
       <Form {...form}>
@@ -80,7 +81,6 @@ export default function resetPassReq() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-[24px]">Reset password</FormLabel>
-                {/* <p className="text-[16px]">reset</p> */}
                 <FormControl>
                   <Input
                     type="password"
